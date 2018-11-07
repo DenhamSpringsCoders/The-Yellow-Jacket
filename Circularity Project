@@ -1,0 +1,85 @@
+var init = function (window) {
+    'use strict';
+    var 
+        draw = window.opspark.draw,
+        physikz = window.opspark.racket.physikz,
+        
+        app = window.opspark.makeApp(),
+        canvas = app.canvas, 
+        view = app.view,
+        fps = draw.fps('#000');
+        
+    
+    window.opspark.makeRunner = function() {
+        
+        window.opspark.runner = {};
+        var runner = window.opspark.runner;
+        
+        var circle;
+        var circles = [];
+
+        var drawCircle = function() {
+            circle = draw.randomCircleInArea(canvas, true, true, '#999', 2);
+            physikz.addRandomVelocity(circle, canvas);
+            view.addChild(circle);
+            circles.push(circle);
+        }
+    
+        var counter = 0; 
+        for (var counter = 0; counter < 10; counter++) {drawCircle()
+        }
+        
+        view.addChild(fps);
+        app.addUpdateable(fps);
+        
+        runner.checkCircleBounds = function(circle){
+    
+            // These are almost correct! This is the part most people have trouble with. There are just two things that need to be changed
+            
+            if ( circle.x > canvas.width + circle.radius ) {
+                circle.x = 0 - circle.radius;
+            } 
+            
+            // This one should check if the circle is to the left of x = 0 - circle.radius and move it to the right side of the screen if it is
+            else if ( circle.x < canvas.width + circle.radius ) {
+                circle.x = 0 - circle.radius;          
+            } 
+        
+            if ( circle.y > canvas.height + circle.radius ) {
+                circle.y = 0 - circle.radius;            
+            }
+        
+            // This one should check if the circle is below y = 0 - circle.radius and move it to the highest y value on the screen if it is
+            else if ( circle.y < canvas.height + circle.radius ) {
+                circle.y = 0 -circle.radius;       
+            }
+        };
+        
+        var update = function runner.checkCircleBounds()) {     
+    
+            // Rather than calling physikz.updatePosition() for each circle one at a time, you should use a loop here (I recommend a for loop)
+            // Remember to loop through all of the circles you create and not just 5. 
+            // You should have 100, but if you decide to make more make sure you loop through all of them and not just the first 100.
+            // Don't forget that you can use the counting variable in your loop as an index into an array 
+            for(var counter = physikz.updatePosition(circles);)
+            
+            for(runner.checkCircleBounds())
+            
+            
+            // Here you should call runner.checkCircleBounds() for every circle as well. You should use a loop to do that here as well. 
+            // Don't forget to pass each circle in as an argument. The final result should look very much like the loop you use to call physikz.updatePosition for each circle.
+        }
+        
+        
+        runner.circle = circle;
+        runner.circles = circles;
+        runner.drawCircle = drawCircle;
+        runner.update = update;
+        app.addUpdateable(window.opspark.runner);
+    }
+};
+if((typeof process !== 'undefined') &&
+    (typeof process.versions.node !== 'undefined')) {
+   
+    module.exports = init;
+}
